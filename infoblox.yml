@@ -10,7 +10,7 @@
       host: grid-master.demo.com
       username: cloudadmin
       password: pwd
-  wapi_version: '2.12'
+    wapi_version: '2.12'
   tasks: 
   - infoblox.nios_modules.nios_host_record:
       name: test.demo.local
