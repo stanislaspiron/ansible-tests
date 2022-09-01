@@ -1,0 +1,15 @@
+---
+- name: Update BIG-IP device certificate
+  hosts: "{{ target }}"
+  gather_facts: False
+  vars:
+    key_path: "/config/httpd/conf/ssl.key/"
+    csr_path: "/config/httpd/conf/ssl.csr/"
+    crt_path: "/config/httpd/conf/ssl.crt/"
+
+  tasks:
+
+    - name: Backup original server.crt and server.key files
+      shell: >
+        cp -p "{{ crt_path + 'server.crt'}}" "{{ crt_path + 'server.crt.'}}"$(date +%s);
+        cp -p "{{ key_path + 'server.key'}}" "{{ key_path + 'server.key.'}}"$(date +%s)
