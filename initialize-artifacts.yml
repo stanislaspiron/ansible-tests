@@ -2,8 +2,10 @@
 
 - hosts: "{{ cloudInit.hostname }}"
   vars:
-    ansible_user: "{{ lookup ('env', 'BIGIP_USERNAME')}}"
-    ansible_password: "{{ lookup ('env', 'BIGIP_PASSWORD')}}"
+#    ansible_user: "{{ lookup ('env', 'BIGIP_USERNAME')}}"
+#    ansible_password: "{{ lookup ('env', 'BIGIP_PASSWORD')}}"
+    ansible_user: "{{ lookup ('env', 'ANSIBLE_USER')}}"
+    ansible_password: "{{ lookup ('env', 'ANSIBLE_PASSWORD')}}"
     ansible_host: "{{ mgmt_ip }}"
     mgmt_ip: "{{ cloudInit.management.split('/')[0] }}"
   gather_facts: no
