@@ -1,0 +1,58 @@
+---
+
+- hosts: "{{ cloudInit.hostname }}"
+  vars:
+    ansible_user: "{{ lookup ('env', 'BIGIP_USERNAME')}}"
+    ansible_password: "{{ lookup ('env', 'BIGIP_PASSWORD')}}"
+    ansible_host: "{{ mgmt_ip }}"
+  gather_facts: no
+  connection: local
+  tasks:
+
+  - name: Check Cloud-Init ends succesfully
+    ansible.builtin.assert:
+      that:
+        - cloudInit.status is defined
+        - cloudInit.status == 'SUCCESS'
+
+      fail_msg: "'cloudInit.status' must be 'SUCCESS'"
+      success_msg: "Cloud-Init finished successfuly"
+    
+  - name: Download existing DO Declaration
+    uri:
+      url: https://{{ ansible_host }}/mgmt/shared/declarative-onboarding?statusCodes=experimental
+      method: GET
+      user: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      force_basic_auth: yes
+      return_content: yes
+      validate_certs: no
+      status_code:
+      - 200
+      - 204
+      - 404
+      timeout: 30
+      body_format: json
+    register: result
+
+  - set_stats:
+      data:
+        target: "{{ inventory_hostname }}"
+        mgmt_ip: "{{ cloudInit.management.split('/')[0] }}"
+        dns_server:
+          dc: "{{ cloudInit.metadata.zone }}"
+          name: "{{ inventory_hostname_short | upper }}"
+
+  - set_stats:
+      data:
+        self_ip: "{{ do_self[0].split('/')[0] }}"
+    when: result.status == 200 and result.json["declaration"] is defined
+    vars:
+      do_self: "{{ result.json['declaration']['Common'].values() 
+        | selectattr('class', 'defined') 
+        | selectattr('class', 'equalto' , 'SelfIp') 
+        | selectattr('trafficGroup', 'equalto' , 'traffic-group-local-only') 
+        | selectattr('vlan', 'equalto' , 'net_1_1') 
+        | map(attribute='address') 
+        | list 
+        }}"
