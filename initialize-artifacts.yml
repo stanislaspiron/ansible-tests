@@ -5,6 +5,7 @@
     ansible_user: "{{ lookup ('env', 'BIGIP_USERNAME')}}"
     ansible_password: "{{ lookup ('env', 'BIGIP_PASSWORD')}}"
     ansible_host: "{{ mgmt_ip }}"
+    mgmt_ip: "{{ cloudInit.management.split('/')[0] }}"
   gather_facts: no
   connection: local
   tasks:
@@ -38,7 +39,7 @@
   - set_stats:
       data:
         target: "{{ inventory_hostname }}"
-        mgmt_ip: "{{ cloudInit.management.split('/')[0] }}"
+        mgmt_ip: "{{ mgmt_ip }}"
         dns_server:
           dc: "{{ cloudInit.metadata.zone }}"
           name: "{{ inventory_hostname_short | upper }}"
