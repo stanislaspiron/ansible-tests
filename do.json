@@ -14,12 +14,11 @@
             "guiSecurityBanner": true,
             "guiSecurityBannerText": "Welcome to the BIG-IP Configuration Utility.\n\nPlease don't try to authenticate if you are a bad guy."
         },
-        "hostname": "{{hostname}}",
         "root": {
             "class": "User",
             "userType": "root",
-            "oldPassword": "default@F5demo.com",
-            "newPassword": "default@F5demo.com",
+            "oldPassword": "{{root_pw}}",
+            "newPassword": "{{root_pw}}",
             "keys": [
                 "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCd+S4tYjOgjkzFaj97z49Ktojnq85vkBJe4vvA1V/2XyTcl81CTjalQiEPVJJMkG2DY6xEbAC1I+kjBgt7MnmjViOsTXZ8o3a1/0iOIW7C7VUaKtiJW0SEro9ezTSrDoyUE3+raIgFIYrII0Vh4a0FP3Xntn1zNTUzEnDmbwZ+taggupME25LTbMXf4pnCkUCUPE7gmRr7HTUYy6ZKhm+6IWpHw9yrrkmFkJud+9xD0uqv0Gc9P5jCjIFM6SUxIBqDfphfmVXM3QEI6QwupvqAlXHRPLFhHHJOQVh7nUHTzcSua4H5ZwWU1ps7VrAx3aABJhwa4w1CzatDrxVlIuFgV//y1gzgUGSyxHtW+l21Qy0+zJBUlfiB1iXEMS4rLbTJaJDanon9NxfVYAuyQv7DvhRy0BDeYKaQ8MSId4g//uq8nsYNGuNmPxSw0tvUox/RWeYeOYM0d+jaUzv4NuCu74I+EUr/JvFbnmoWoW0dQJr9cFfn4e8DXfc+wf5vs5M= stanislaspiron@github/72402342 # ssh-import-id gh:stanislaspiron"
             ]
