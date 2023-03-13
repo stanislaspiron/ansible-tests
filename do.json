@@ -1,0 +1,142 @@
+{
+    "schemaVersion": "1.30.0",
+    "class": "Device",
+    "async": true,
+    "label": "Cloudinit Onboarding",
+    "Common": {
+        "class": "Tenant",
+        "mySystem": {
+            "class": "System",
+            "cliInactivityTimeout": 1200,
+            "consoleInactivityTimeout": 1200,
+            "autoPhonehome": false,
+            "preserveOrigDhcpRoutes": true,
+            "guiSecurityBanner": true,
+            "guiSecurityBannerText": "Welcome to the BIG-IP Configuration Utility.\n\nPlease don't try to authenticate if you are a bad guy."
+        },
+        "hostname": "{{hostname}}",
+        "root": {
+            "class": "User",
+            "userType": "root",
+            "oldPassword": "default@F5demo.com",
+            "newPassword": "default@F5demo.com",
+            "keys": [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCd+S4tYjOgjkzFaj97z49Ktojnq85vkBJe4vvA1V/2XyTcl81CTjalQiEPVJJMkG2DY6xEbAC1I+kjBgt7MnmjViOsTXZ8o3a1/0iOIW7C7VUaKtiJW0SEro9ezTSrDoyUE3+raIgFIYrII0Vh4a0FP3Xntn1zNTUzEnDmbwZ+taggupME25LTbMXf4pnCkUCUPE7gmRr7HTUYy6ZKhm+6IWpHw9yrrkmFkJud+9xD0uqv0Gc9P5jCjIFM6SUxIBqDfphfmVXM3QEI6QwupvqAlXHRPLFhHHJOQVh7nUHTzcSua4H5ZwWU1ps7VrAx3aABJhwa4w1CzatDrxVlIuFgV//y1gzgUGSyxHtW+l21Qy0+zJBUlfiB1iXEMS4rLbTJaJDanon9NxfVYAuyQv7DvhRy0BDeYKaQ8MSId4g//uq8nsYNGuNmPxSw0tvUox/RWeYeOYM0d+jaUzv4NuCu74I+EUr/JvFbnmoWoW0dQJr9cFfn4e8DXfc+wf5vs5M= stanislaspiron@github/72402342 # ssh-import-id gh:stanislaspiron"
+            ]
+        },
+        "myProvisioning": {
+            "class": "Provision",
+            "asm": "nominal"
+        },
+        "radius-auth": {
+            "class": "Authentication",
+            "enabledSourceType": "radius",
+            "fallback": true,
+            "remoteUsersDefaults": {
+                "partitionAccess": "all",
+                "terminalAccess": "disabled",
+                "role": "no-access"
+            },
+            "radius": {
+                "serviceType": "call-check",
+                "servers": {
+                    "primary": {
+                        "server": "192.168.245.4",
+                        "port": 1812,
+                        "secret": "{{radius_secret}}"
+                    }
+                }
+            }
+        },
+        "radius-role": {
+            "class": "RemoteAuthRole",
+            "attribute": "F5-LTM-User-Info-1=mgmt",
+            "console": "%F5-LTM-User-Shell",
+            "lineOrder": 1000,
+            "role": "%F5-LTM-User-Role",
+            "remoteAccess": true,
+            "userPartition": "%F5-LTM-User-Partition"
+        },
+        "httpdSettings": {
+            "class": "HTTPD",
+            "allow": [
+                "all"
+            ],
+            "authPamIdleTimeout": 1200,
+            "maxClients": 10,
+            "sslCiphersuite": [
+                "ECDHE-RSA-AES128-GCM-SHA256",
+                "ECDHE-RSA-AES256-GCM-SHA384",
+                "ECDHE-RSA-AES128-SHA",
+                "ECDHE-RSA-AES256-SHA",
+                "ECDHE-RSA-AES128-SHA256",
+                "ECDHE-RSA-AES256-SHA384",
+                "ECDHE-ECDSA-AES128-GCM-SHA256",
+                "ECDHE-ECDSA-AES256-GCM-SHA384",
+                "ECDHE-ECDSA-AES128-SHA",
+                "ECDHE-ECDSA-AES256-SHA",
+                "ECDHE-ECDSA-AES128-SHA256",
+                "ECDHE-ECDSA-AES256-SHA384",
+                "AES128-GCM-SHA256",
+                "AES256-GCM-SHA384",
+                "AES128-SHA",
+                "AES256-SHA",
+                "AES128-SHA256",
+                "AES256-SHA256"
+            ],
+            "sslProtocol": "all -SSLv2 -SSLv3 -TLSv1"
+        },
+        "sshSettings": {
+            "class": "SSHD",
+            "inactivityTimeout": 0,
+            "banner": "Please don't try to authenticate if you are a bad guy"
+        },
+        "ntpServers": {
+            "class": "NTP",
+            "servers": [
+                "91.224.149.41",
+                "95.81.173.8"
+            ],
+            "timezone": "Europe/Paris"
+        },
+        "dnsServers": {
+            "class": "DNS",
+            "nameServers": [
+                "192.168.1.249"
+            ]
+        },
+        "MgmtIpFW": {
+            "class": "ManagementIpFirewall",
+            "rules": [
+                {
+                    "name": "net_192",
+                    "action": "accept",
+                    "protocol": "any",
+                    "source": {
+                        "addressLists": [
+                            "net_192_168"
+                        ]
+                    }
+                }
+            ]
+        },
+        "net_192_168": {
+            "class": "FirewallAddressList",
+            "addresses": [
+                "192.168.0.0/16"
+            ]
+        },
+        "dbvars": {
+            "class": "DbVariables",
+            "icrd.timeout": "180",
+            "restjavad.timeout": "180",
+            "restnoded.timeout": "180",
+            "ui.advisory.enabled": true,
+            "ui.advisory.color": "green",
+            "ui.advisory.text": "Orchestrated Device: Please do not modify configuration",
+            "ui.system.preferences.recordsperscreen": 200,
+            "provision.restjavad.extramb": 500,
+            "provision.extramb": 1000
+        }
+    }
+}
