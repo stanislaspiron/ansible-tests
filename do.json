@@ -14,6 +14,17 @@
             "guiSecurityBanner": true,
             "guiSecurityBannerText": "Welcome to the BIG-IP Configuration Utility.\n\nPlease don't try to authenticate if you are a bad guy."
         },
+        "utilityLicense": {
+            "class": "License",
+            "licenseType": "licensePool",
+            "bigIqHost": "192.168.247.72",
+            "bigIqUsername": "{{ bigiq_username }}",
+            "bigIqPassword": "{{ bigiq_password }}",
+            "licensePool": "LAB",
+            "unitOfMeasure": "yearly",
+            "reachable": false,
+            "hypervisor": "kvm"
+        },
         "root": {
             "class": "User",
             "userType": "root",
